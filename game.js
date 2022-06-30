@@ -3,7 +3,7 @@ import { update as updateSnake, draw as drawSnake, SNAKE_SPEED } from './snake.j
 
 let lastRenderTime = 0
 
-
+const gameBoard = document.getElementById('game-board')
 /*set up a game loop, a function that will 
 repeat it self over and over again on a set interval, that way
 the rendering can constantly be updated, ie the the snake position can be 
@@ -36,5 +36,6 @@ function update() {
 }
 
 function draw() {
-    drawSnake()
+    gameBoard.innerHTML = " "
+    drawSnake(gameBoard)
 }
