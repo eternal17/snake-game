@@ -10,8 +10,13 @@ export const SNAKE_SPEED = 5
 // position of snake based of x,y coordinates on the grid. X and Y at 11 is the middle of the screen. 
 const snakeBody = [{ x: 11, y: 11 }]
 
+
+let newBodyParts = 0
+
 // this is a function that will update all the logic for the game
 export function update() {
+
+    addBodyParts()
     const inputDirection = getInputDirection()
 
     // this is for the body of the snake, each bodypart should follow the head of the snakes movement. 
@@ -37,4 +42,41 @@ export function draw(gameBoard) {
         snakeElement.classList.add('snake')
         gameBoard.appendChild(snakeElement)
     })
-} 
+}
+
+export function expandSnake(amount) {
+    newBodyParts += amount
+}
+
+// determine if a certain position is on the snake.
+export function onSnake(position, { ignoreHead = false } = {}) {
+    return snakeBody.some((bodyPart, index) => {
+        if (ignoreHead && index === 0) return false
+        return equalPositions(bodyPart, position)
+    })
+}
+
+export function getSnakeHead() {
+    return snakeBody[0]
+}
+
+
+// checks if the snake has crossed over on itself
+export function snakeIntersection() {
+    return onSnake(snakeBody[0], { ignoreHead: true })
+}
+
+// checks if the 
+function equalPositions(pos1, pos2) {
+    return pos1.x === pos2.x && pos1.y === pos2.y
+}
+
+function addBodyParts() {
+    for (let i = 0; i < newBodyParts; i++) {
+        // append a new element onto the end of the snake body 
+        snakeBody.push({ ...snakeBody[snakeBody.length - 1] })
+    }
+
+    // reset this everytime so the snake doesnt keep on expanding
+    newBodyParts = 0
+}

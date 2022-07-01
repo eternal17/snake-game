@@ -1,14 +1,25 @@
-import { update as updateSnake, draw as drawSnake, SNAKE_SPEED } from './snake.js'
-
-
+import { update as updateSnake, draw as drawSnake, SNAKE_SPEED, getSnakeHead, snakeIntersection } from './snake.js'
+import { update as updateFood, draw as drawFood } from './food.js'
+import { outsideGrid } from './grid.js'
 let lastRenderTime = 0
 
 const gameBoard = document.getElementById('game-board')
+
+let gameOver = false
+
 /*set up a game loop, a function that will 
 repeat it self over and over again on a set interval, that way
 the rendering can constantly be updated, ie the the snake position can be 
 updated. */
 function main(currentTime) {
+
+    if (gameOver) {
+        if (confirm('You lost. Press Ok to restart')) {
+            window.location = '/'
+        }
+        return
+    }
+
     /* requesting from the browser when the next frame can be animated.
    we want to always request the animation frame, no matter what */
     window.requestAnimationFrame(main)
@@ -29,13 +40,20 @@ function main(currentTime) {
 
 }
 
-// window.requestAnimationFrame(main)
+window.requestAnimationFrame(main)
 
 function update() {
     updateSnake()
+    updateFood()
+    checkDeath()
 }
 
 function draw() {
     gameBoard.innerHTML = " "
     drawSnake(gameBoard)
+    drawFood(gameBoard)
+}
+
+function checkDeath() {
+    gameOver = outsideGrid(getSnakeHead()) || snakeIntersection()
 }
